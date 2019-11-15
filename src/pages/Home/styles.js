@@ -5,6 +5,7 @@ export const Container = styled.View`
   flex: 1;
   justify-content: center;
   align-items: center;
+  background: #191920;
 `
 
 export const Button = styled(TouchableHighlight)`

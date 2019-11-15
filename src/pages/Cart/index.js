@@ -6,11 +6,11 @@ import { Container } from './styles'
 export default function Cart() {
   return (
     <Container>
-      <Text>Cart</Text>
+      <Text style={{ color: '#fff' }}>Cart</Text>
     </Container>
   )
 }
 
-Cart.navigationOptions = {
-  title: 'Cart'
-}
+// Cart.navigationOptions = {
+//   title: 'Cart'
+// }
