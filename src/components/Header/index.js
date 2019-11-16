@@ -1,4 +1,5 @@
 import React, { Component } from 'react'
+import { connect } from 'react-redux'
 import { withNavigation } from 'react-navigation'
 import Icon from 'react-native-vector-icons/MaterialIcons'
 
@@ -7,7 +8,7 @@ import logoImg from '../../assets/images/rocketshoes-logo.png'
 
 class Header extends Component {
   render() {
-    const { navigation } = this.props
+    const { navigation, cartSize } = this.props
     return (
       <Container>
         <LogoContainer onPress={() => navigation.navigate('Home')}>
@@ -16,7 +17,7 @@ class Header extends Component {
         <Bag onPress={() => navigation.navigate('Cart')}>
           <Icon name="shopping-basket" size={25} color="#fff" />
           <Badge>
-            <BadgeText>3</BadgeText>
+            <BadgeText>{cartSize}</BadgeText>
           </Badge>
         </Bag>
       </Container>
@@ -24,4 +25,8 @@ class Header extends Component {
   }
 }
 
-export default withNavigation(Header)
+const mapStateToProps = state => ({
+  cartSize: state.cart.length
+})
+
+export default connect(mapStateToProps)(withNavigation(Header))

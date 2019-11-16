@@ -1,5 +1,6 @@
 module.exports = {
   env: {
+    browser: true,
     es6: true,
   },
   extends: [
@@ -10,7 +11,6 @@ module.exports = {
   globals: {
     Atomics: 'readonly',
     SharedArrayBuffer: 'readonly',
-    __DEV__: 'readonly'
   },
   parser: 'babel-eslint',
   parserOptions: {
@@ -31,6 +31,8 @@ module.exports = {
       'warn',
       { extensions: ['.jsx', '.js'] }
     ],
-    'import/prefer-default-export': 'off'
+    'import/prefer-default-export': 'off',
+    'no-console': ["error", { allow: ["tron"] }],
+    'no-param-reassign': 'off'
   },
 };
