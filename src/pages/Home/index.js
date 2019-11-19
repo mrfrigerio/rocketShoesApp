@@ -1,6 +1,9 @@
 import React, { Component } from 'react'
 import { connect } from 'react-redux'
+import { bindActionCreators } from 'redux'
 import Icon from 'react-native-vector-icons/MaterialIcons'
+import currencyFormatter from '../../utils/currencyFormatter'
+import * as CartActions from '../../store/modules/cart/actions'
 import {
   Container,
   ProductList,
@@ -22,22 +25,23 @@ class Home extends Component {
 
   async componentDidMount() {
     const { data } = await api.get('/products')
+    const dataFormatted = data.map(product => {
+      product.priceFormatted = currencyFormatter.format(product.price)
+      return product
+    })
     this.setState({
-      products: [...data]
+      products: [...dataFormatted]
     })
   }
 
-  handleAddProduct(product) {
-    const { dispatch } = this.props
-    dispatch({
-      type: '@cart/ADD',
-      product
-    })
+  handleAddProduct(id) {
+    const { addProductRequest } = this.props
+    addProductRequest(id)
   }
 
   render() {
-    // const { navigation } = this.props
-    const { products, cartProductSize } = this.state
+    const { amount } = this.props
+    const { products } = this.state
     return (
       <Container>
         <ProductList
@@ -47,8 +51,8 @@ class Home extends Component {
             <ProductCard>
               <ProductImage source={{ uri: item.image }} />
               <Title>{item.title}</Title>
-              <Price>{item.price}</Price>
-              <AddButton onPress={() => this.handleAddProduct(item)}>
+              <Price>{item.priceFormatted}</Price>
+              <AddButton onPress={() => this.handleAddProduct(item.id)}>
                 <BtnIcon>
                   <Icon
                     name="add-shopping-cart"
@@ -56,7 +60,7 @@ class Home extends Component {
                     color="#fff"
                     style={{ marginRight: 5 }}
                   />
-                  <IconText>?</IconText>
+                  <IconText>{amount[item.id] || 0}</IconText>
                 </BtnIcon>
                 <BtnText>adicionar</BtnText>
               </AddButton>
@@ -67,4 +71,14 @@ class Home extends Component {
     )
   }
 }
-export default connect()(Home)
+
+const mapStateToProps = state => ({
+  amount: state.cart.reduce((amount, product) => {
+    amount[product.id] = product.amount
+    return amount
+  }, {})
+})
+
+const mapDispatchToProps = dispatch => bindActionCreators(CartActions, dispatch)
+
+export default connect(mapStateToProps, mapDispatchToProps)(Home)
